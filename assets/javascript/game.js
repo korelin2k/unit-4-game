@@ -1,26 +1,34 @@
-var game = {
+var characters = {
     charObi: {
         health: 100,
-        attack: 10,
+        attack: 15,
         counter: 10,
         name: 'Obi Wan Kenobi',
-        side: 'light',
+        side: 'rebel',
         image: 'obiwan.jpg'
     },
     charLuke: {
         health: 125,
-        attack: 10,
+        attack: 15,
         counter: 10,
         name: 'Luke Skywalker',
-        side: 'light',
+        side: 'rebel',
         image: 'luke.jpg'
     },  
+    charYoda: {
+        health: 125,
+        attack: 15,
+        counter: 10,
+        name: 'Yoda',
+        side: 'rebel',
+        image: 'yoda.jpg'
+    }, 
     charSidious: {
         health: 100,
         attack: 10,
         counter: 10,
         name: 'Darth Sidious',
-        side: 'dark',
+        side: 'empire',
         image: 'sidious.jpg'
     },
     charMaul: {
@@ -28,37 +36,34 @@ var game = {
         attack: 10,
         counter: 10,
         name: 'Darth Maul',
-        side: 'dark',
+        side: 'empire',
         image: 'maul.jpg'
     },
+    charVader: {
+        health: 100,
+        attack: 10,
+        counter: 10,
+        name: 'Darth Vader',
+        side: 'empire',
+        image: 'vader.jpg'
+    }
+}
 
+var charNames = [];
+
+var game = {
     inititateGame: function() {
-        game.createPlayerCard(game.charLuke);
-        game.createPlayerCard(game.charObi);
-        game.createPlayerCard(game.charSidious);
-        game.createPlayerCard(game.charMaul);
-        console.log(this.playerOptions());
-    },
-
-    playerOptions: function() {
-        var names = [];
-        for (items in this) {
-            if (typeof this[items] === 'object') {
-                var name = this[items].name.replace(/ /g, '_');
-                names.push(name);
-            }
+        for (char in characters) {
+            charNames.push(char);
         }
-
-        return names;
     },
 
-    createPlayerCard: function(player) {
+    createPlayerCard: function(player, char, side) {
         var imagePath = 'assets/images/' + player.image;
-        var anchorName = player.name.replace(/ /g, '_');
 
-        var anchor = $('<a>').addClass(anchorName);
+        var anchor = $('<a>').addClass(char);
         var card = $('<div>').addClass('card float-left p-2 m-2 text-center').attr({
-            style: 'width: 16rem',
+            style: 'width: 14rem',
         });
 
         var image = $('<img>').addClass('card-img-top').attr({
@@ -71,57 +76,102 @@ var game = {
         var cardTitle = $('<a>').addClass('btn btn-dark p-2 m-0 text-center').attr({
             href: '#'
         });
+        var cardHealth = $('<p>').addClass('p-2').text(player.health);
         cardTitle.text(player.name);
         cardBody.append(cardTitle);
+        cardBody.append(cardHealth);
         card.append(cardBody);
         anchor.append(card);
 
-        $('.character-pick').append(anchor);
-        console.log(card);
+        if (side === player.side) {
+            $('.character-pick').append(anchor);
+        }  else {
+            $(".character-pick-enemy").append(anchor);
+        }
+    },
+
+    battle: function(hero, enemy) {
+        heroCharacter = characters[hero];
+        enemyCharacter = characters[enemy];
+
+        enemyCharacter.health = enemyCharacter.health - heroCharacter.attack;
+        if (enemyCharacter.health <= 0) {
+            enemyCharacter.health = 0;
+
+            $('.' + enemy).find('img').attr('src', 'assets/images/dead-icon.jpg');
+        }
+
+        heroCharacter.health = heroCharacter.health - enemyCharacter.counter;
+        if (heroCharacter.health <= 0) {
+            heroCharacter.health = 0;
+
+            $('.' + hero).find('img').attr('src', 'assets/images/dead-icon.jpg');
+        }
+
+        $('.' + hero).find('p').text(heroCharacter.health);
+        $('.' + enemy).find('p').text(enemyCharacter.health);
     }
 }
 
 $( document ).ready(function() {
+    var heroChosen = "";
+    var enemyChosen = "";
+
     game.inititateGame();
-    var charOptions = game.playerOptions();
-    var heroSelected = false;
-    var enemySelected = false;
 
-    var classList = "";
-    for (i in charOptions) {
-        classList += "." + charOptions[i] + ", "; 
-    }
-    classList = classList.slice(0, -2);
-
-    $(classList).click(function() {
-        var char = $(this).attr("class");
-
-        if (!heroSelected) {
-            var character = $("." + char);
-            character.detach();
-            character.off();
-            character.find('.btn-dark').toggleClass('btn-dark btn-primary')
-            charOptions.splice( charOptions.indexOf(char), 1 );
-            $(".character-yours").append(character);
-
-            for (enemy in charOptions) {
-                var charEnemy = $("." + charOptions[enemy]);
-                charEnemy.detach();
-                charEnemy.find('.btn-dark').toggleClass('btn-dark btn-danger')
-                $(".character-enemies").append(charEnemy);
-            }
-
-            $(".char-listing").children().hide();
-            heroSelected = true;
-        } else if (!enemySelected) {
-            var character = $("." + char);
-            character.detach();
-            charOptions.splice( charOptions.indexOf(char), 1 );
-            $(".character-defender").append(character);
-
-            enemySelected = true;
+    $('.rebel, .empire').click(function() {
+        var side = $(this).attr("class");
+        var faction = "";
+        
+        if(side.includes('rebel')) {
+            faction = 'rebel';
         } else {
-            console.log("Clicking does nothing!");
+            faction = 'empire';
         }
+
+        $(".rebel-empire").children().hide();
+        $(".character-selection").show();
+
+        for (char in characters) {
+            game.createPlayerCard(characters[char], char, faction);
+        }
+
+        var classList = "";
+        for (i in charNames) {
+            classList += "." + charNames[i] + ", "; 
+        }
+        classList = classList.slice(0, -2);
+    
+        $(classList).click(function() {
+            var char = $(this).attr("class");
+    
+            if (!heroChosen) {
+                var character = $("." + char);
+                character.detach();
+                character.off();
+                character.find('.btn-dark').toggleClass('btn-dark btn-primary')
+                heroChosen = char;
+                charNames.splice( charNames.indexOf(char), 1 );
+                $(".character-yours").append(character);
+                $(".character-pick-enemy").show();
+                $(".character-pick").children().hide();
+            } else if (!enemyChosen) {
+                var character = $("." + char);
+                character.detach();
+                character.find('.btn-dark').toggleClass('btn-dark btn-danger')
+                character.find('.float-left').toggleClass('float-left float-right')
+                enemyChosen = char;
+                charNames.splice( charNames.indexOf(char), 1 );
+                $(".character-defender").append(character[0]);
+                $(".character-selection").children().hide();
+                $(".battle-royale").show();
+            } else {
+                console.log("Clicking does nothing!");
+            }
+        });
+    });
+
+    $('.light-saber').click(function() {
+        game.battle(heroChosen, enemyChosen);
     });
 });

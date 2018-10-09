@@ -13,41 +13,56 @@
     <script src="assets/javascript/game.js"></script>
 </head>
 <body>
-    <div class="container-fluid mt-3 mb-3">
-        <div class="row">
-            <div class="col-6">
-                <div class="jumbotron h-100">
-                    <h1>Star Wars RPG</h1>
-                    <hr>
-                    <div class="row d-flex flex-nowrap char-listing">
-                        <div class="col-12 character-pick">
-                            <h2>Character Select</h2>
-                        </div>
+    <div class="container-fluid mt-3 mb-3 primary-container">
+        <div class="row rebel-empire">
+            <div class="col-12 text-center">
+                <h1>Choose Wisely</h1>
+                <div class="row rebel m-2 mt-5">
+                    <div class="col">
+                        <img src="assets/images/rebel-logo.png" width="300px" />
                     </div>
-                    <div class="row d-flex flex-nowrap">
-                        <div class="col-12 character-enemies">
-                            <h2>Enemies</h2>
-                        </div>
+                </div>
+                <div class="row empire m-2">
+                    <div class="col">
+                        <img src="assets/images/empire-logo.png" width="300px" />
                     </div>
                 </div>
             </div>
-            <div class="col-6">
-                <div class="jumbotron h-100">
-                    <div class="row">
-                        <div class="col character-yours">
-                            <h2>Your Character</h2>
-                        </div>
+        </div>
+        <div class="row character-selection">
+            <div class="col-12">
+                <h1>Character Selection</h1>
+                <div class="row mt-5">
+                    <div class="col-12 character-pick">
+                        <h2>Pick Your Hero</h2>
                     </div>
-                    <div class="row">
-                        <div class="col character-abilities">
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 character-pick-enemy">
+                        <h2>Enemies</h2>
                     </div>
-                    <div class="row">
-                        <div class="col character-defender">
-                            <h2>Defender</h2>
-                        </div>  
-                    </div> 
-                </div>            
+                </div>
+            </div>
+        </div>
+        <div class="row battle-royale">
+            <div class="col-12">
+            <h1>Battle Royale</h1>
+                <div class="row mt-5">
+                    <div class="col-12 col-sm-5 character-yours">
+                        <h2>Your Character</h2>
+                    </div>
+                    <div class="col-12 col-sm-2 text-center character-attack my-auto pt-5 pb-5">
+                        <img src="assets/images/light-saber.png" class="light-saber" width="50px" />
+                    </div>
+                    <div class="col-12 col-sm-5 character-defender text-right">
+                        <h2>Defender</h2>
+                    </div>  
+                </div>
+                <div class="row mt-5">
+                    <div class="col-12 character-pick-enemy">
+                        <h2>Enemies</h2>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

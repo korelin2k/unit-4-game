@@ -1,12 +1,57 @@
 body {
-    background-image: url("../images/stormtrooper-bg.jpg");
-    background-size: cover;
+    background-image: url("../images/deathstar.jpg");
+    background-size:     cover;
+    background-repeat:   no-repeat;
+    background-position: center center;  
+    color: #fff;
 }
 
-.card-light {
-    background-color: rgb(148, 163, 249);
+.primary-container {
+    max-width: 800px;
+    min-width: 400px;
 }
 
-.card-dark {
-    background-color: rgb(242, 111, 111);
+.card {
+    background-color: #aaa;
+}
+
+.rebel-empire {
+    
+}
+
+.rebel {
+    background-color: rgb(64, 191, 254);
+}
+
+.empire {
+    background-color: rgb(255, 70, 70);
+}
+
+.character-selection {
+    display: none;
+}
+
+.battle-royale {
+    display: none;
+}
+
+.character-pick-enemy {
+    display: none;
+}
+
+.character-attack {
+    vertical-align: middle;
+    background-color: #aaa;
+}
+
+h1 {
+    text-align: left;
+    color: #fff;
+}
+
+h1:after
+{
+    content:' ';
+    display:block;
+    border:1px solid rgb(244, 194, 86);
 }
