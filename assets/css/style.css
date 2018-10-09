@@ -1,0 +1,12 @@
+body {
+    background-image: url("../images/stormtrooper-bg.jpg");
+    background-size: cover;
+}
+
+.card-light {
+    background-color: rgb(148, 163, 249);
+}
+
+.card-dark {
+    background-color: rgb(242, 111, 111);
+}
