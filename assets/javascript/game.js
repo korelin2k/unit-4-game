@@ -91,25 +91,39 @@ var game = {
     },
 
     battle: function(hero, enemy) {
-        heroCharacter = characters[hero];
-        enemyCharacter = characters[enemy];
+        var heroCharacter = characters[hero];
+        var enemyCharacter = characters[enemy];
+        var heroStatus = 'alive';
+        var enemyStatus = 'alive';
+        var status = [];
 
         enemyCharacter.health = enemyCharacter.health - heroCharacter.attack;
         if (enemyCharacter.health <= 0) {
             enemyCharacter.health = 0;
+            enemyStatus = 'dead';
 
-            $('.' + enemy).find('img').attr('src', 'assets/images/dead-icon.jpg');
+            var enemyCard = $('.' + enemy);
+            enemyCard.find('img').attr('src', 'assets/images/dead-icon.jpg');
+            enemyCard.find('div').toggleClass('float-right float-left');
+            enemyCard.detach();
+            enemyCard.off();
+            $(".character-pick-enemy").append(enemyCard);
         }
 
         heroCharacter.health = heroCharacter.health - enemyCharacter.counter;
         if (heroCharacter.health <= 0) {
             heroCharacter.health = 0;
+            heroStatus = 'dead';
 
             $('.' + hero).find('img').attr('src', 'assets/images/dead-icon.jpg');
         }
 
+        status = [heroStatus, enemyStatus];
+
         $('.' + hero).find('p').text(heroCharacter.health);
         $('.' + enemy).find('p').text(enemyCharacter.health);
+
+        return status;
     }
 }
 
@@ -172,6 +186,16 @@ $( document ).ready(function() {
     });
 
     $('.light-saber').click(function() {
-        game.battle(heroChosen, enemyChosen);
+        var status = [];
+        status = game.battle(heroChosen, enemyChosen);
+
+        if (status[0] === 'dead') {
+            alert("YOU SUCK");
+        }
+
+        if (status[1] === 'dead') {
+            alert("HE BE DEAD");
+            enemyChosen = "";
+        }
     });
 });
