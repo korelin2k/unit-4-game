@@ -1,7 +1,7 @@
 var characters = {
     charObi: {
-        health: 100,
-        attack: 15,
+        health: 150,
+        attack: 8,
         counter: 10,
         name: 'Obi Wan Kenobi',
         side: 'rebel',
@@ -9,40 +9,40 @@ var characters = {
     },
     charLuke: {
         health: 125,
-        attack: 15,
-        counter: 10,
+        attack: 10,
+        counter: 20,
         name: 'Luke Skywalker',
         side: 'rebel',
         image: 'luke.jpg'
     },  
     charYoda: {
-        health: 125,
-        attack: 15,
-        counter: 10,
+        health: 100,
+        attack: 12,
+        counter: 30,
         name: 'Yoda',
         side: 'rebel',
         image: 'yoda.jpg'
     }, 
     charSidious: {
-        health: 100,
-        attack: 10,
+        health: 150,
+        attack: 8,
         counter: 10,
         name: 'Darth Sidious',
         side: 'empire',
         image: 'sidious.jpg'
     },
     charMaul: {
-        health: 100,
+        health: 125,
         attack: 10,
-        counter: 10,
+        counter: 20,
         name: 'Darth Maul',
         side: 'empire',
         image: 'maul.jpg'
     },
     charVader: {
         health: 100,
-        attack: 10,
-        counter: 10,
+        attack: 12,
+        counter: 30,
         name: 'Darth Vader',
         side: 'empire',
         image: 'vader.jpg'
@@ -50,6 +50,7 @@ var characters = {
 }
 
 var charNames = [];
+var baseAttack = 0;
 
 var game = {
     inititateGame: function() {
@@ -92,12 +93,16 @@ var game = {
 
     battle: function(hero, enemy) {
         var heroCharacter = characters[hero];
+        var heroQuick = heroCharacter.name.substr(0,heroCharacter.name.indexOf(' '));
         var enemyCharacter = characters[enemy];
+        var enemyQuick = enemyCharacter.name.substr(0,enemyCharacter.name.indexOf(' '));
         var heroStatus = 'alive';
         var enemyStatus = 'alive';
         var status = [];
+        var attackLine = "";
 
         enemyCharacter.health = enemyCharacter.health - heroCharacter.attack;
+        attackLine = heroQuick + " slashes " + enemyQuick + " for " + heroCharacter.attack + " dmg<br />";
         if (enemyCharacter.health <= 0) {
             enemyCharacter.health = 0;
             enemyStatus = 'dead';
@@ -108,9 +113,20 @@ var game = {
             enemyCard.detach();
             enemyCard.off();
             $(".character-pick-enemy").append(enemyCard);
+            attackLine += enemyQuick + " died<br />";
         }
 
-        heroCharacter.health = heroCharacter.health - enemyCharacter.counter;
+        if (enemyStatus === 'alive') {
+            heroCharacter.health = heroCharacter.health - enemyCharacter.counter;
+            attackLine += heroQuick + " slashes " + enemyQuick + " for " + enemyCharacter.attack + " dmg";
+        }
+
+        if (baseAttack === 0) {
+            baseAttack = heroCharacter.attack;
+        }
+
+        heroCharacter.attack = (heroCharacter.attack + baseAttack);
+
         if (heroCharacter.health <= 0) {
             heroCharacter.health = 0;
             heroStatus = 'dead';
@@ -122,14 +138,35 @@ var game = {
 
         $('.' + hero).find('p').text(heroCharacter.health);
         $('.' + enemy).find('p').text(enemyCharacter.health);
+        $('.damage').html(attackLine);
 
         return status;
+    },
+
+    gameOver: function(resultOfGame) {
+        if (resultOfGame === 'win') {
+            $('.character-attack').html('<h2>You Won - Enjoy the Loot Box!</h2>');
+        } else if (resultOfGame === 'loss') {
+            $('.character-attack').html('<h2>You Lost - No Loot For You!</h2>');
+        } else {
+            console.log("How did you end up in gameOver");
+        }
+
+        var restartButton = $('<input type="Restart" value="Restart Game"/>');
+        restartButton.addClass('btn btn-warning restart-game');
+        $('.character-attack').append(restartButton);
+
+        $('.restart-game').click(function() {
+            console.log('restart');
+            location.reload();
+        });
     }
 }
 
 $( document ).ready(function() {
     var heroChosen = "";
     var enemyChosen = "";
+    var enemyKills = 0;
 
     game.inititateGame();
 
@@ -178,6 +215,7 @@ $( document ).ready(function() {
                 charNames.splice( charNames.indexOf(char), 1 );
                 $(".character-defender").append(character[0]);
                 $(".character-selection").children().hide();
+                $(".damage").text(characters[heroChosen].name + " vs. " + characters[enemyChosen].name);
                 $(".battle-royale").show();
             } else {
                 console.log("Clicking does nothing!");
@@ -187,15 +225,22 @@ $( document ).ready(function() {
 
     $('.light-saber').click(function() {
         var status = [];
-        status = game.battle(heroChosen, enemyChosen);
 
-        if (status[0] === 'dead') {
-            alert("YOU SUCK");
-        }
+        if (enemyChosen) {
+            status = game.battle(heroChosen, enemyChosen);
 
-        if (status[1] === 'dead') {
-            alert("HE BE DEAD");
-            enemyChosen = "";
+            if (status[0] === 'dead') {
+                game.gameOver('loss');
+            }
+
+            if (status[1] === 'dead') {
+                enemyKills++;
+                enemyChosen = "";
+
+                if(enemyKills === 3) {
+                    game.gameOver('win');
+                }
+            }
         }
     });
 });

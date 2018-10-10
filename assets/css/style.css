@@ -7,16 +7,16 @@ body {
 }
 
 .primary-container {
-    max-width: 800px;
-    min-width: 400px;
+    max-width: 1200px;
+    min-width: 800px;
 }
 
 .card {
     background-color: #aaa;
 }
 
-.rebel-empire {
-    
+.light-saber:hover {
+    transform: scale(2);
 }
 
 .rebel {
@@ -41,7 +41,8 @@ body {
 
 .character-attack {
     vertical-align: middle;
-    background-color: #aaa;
+    background-color: #fff;
+    color: #000;
 }
 
 h1 {
