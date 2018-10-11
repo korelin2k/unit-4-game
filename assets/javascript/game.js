@@ -158,16 +158,23 @@ var game = {
             placement : 'bottom', 
             html: true, 
             content : function(){
-                var content = game.characterStats(player);
+                var content = game.characterStats(player, char);
                 return content;
             },
             template: popoverTemplate
         })
     },
 
-    characterStats: function(player) {
+    characterStats: function(player, char) {
         var restCall = 'https://swapi.co/api/people/' + player.swapiID + "/";
-        console.log(restCall);
+        console.log(char);
+
+        var charHealthClass = "char-health-" + player.swapiID;
+        var charAttackClass = "char-attack-" + player.swapiID;
+        var charHairClass = "char-hair-" + char;
+        var charSkinClass = "char-skin-" + char;
+        var charEyeClass = "char-eye-" + char;
+        var charBirthClass = "char-birth-" + char;
 
         $.ajax({
             url: restCall
@@ -179,23 +186,21 @@ var game = {
             player.eyeColor = info.eye_color;
             player.birthYear = info.birth_year;
 
-            $('.char-height').text('Height: ' + player.height);
-            $('.char-mass').text('Mass: ' + player.mass);
-            $('.char-hair').text('Hair: ' + player.hair);
-            $('.char-skin').text('Skin Color: ' + player.skinColor);
-            $('.char-eye').text('Eye Color: ' + player.eyeColor);
-            $('.char-birth').text('Birth Year: ' + player.birthYear);
+            $("." + charHairClass).text('Hair: ' + player.hair);
+            $("." + charSkinClass).text('Skin Color: ' + player.skinColor);
+            $("." + charEyeClass).text('Eye Color: ' + player.eyeColor);
+            $("." + charBirthClass).text('Birth Year: ' + player.birthYear);
         });
 
         var content = ['<ul class="list-group list-group-flush">',
             '<li class="list-group-item">Name: ' + player.name + "</li>",
-            '<li class="list-group-item">Health: ' + player.health + "</li>",
-            '<li class="list-group-item">Attack: ' + player.attack + "</li>",
+            '<li class="list-group-item ' + charHealthClass + '">Health: ' + player.health + "</li>",
+            '<li class="list-group-item ' + charAttackClass + '">Attack: ' + player.attack + "</li>",
             '<li class="list-group-item">Counter: ' + player.counter + "</li>",
-            '<li class="list-group-item char-hair">Hair: ' + player.hair + "</li>",
-            '<li class="list-group-item char-skin">Skin Color: ' + player.skinColor + "</li>",
-            '<li class="list-group-item char-eye">Eye Color: ' + player.eyeColor + "</li>",
-            '<li class="list-group-item char-birth">Birth Year: ' + player.birthYear + "</li>",
+            '<li class="list-group-item ' + charHairClass + '">Hair: ' + player.hair + "</li>",
+            '<li class="list-group-item ' + charSkinClass + '">Skin Color: ' + player.skinColor + "</li>",
+            '<li class="list-group-item ' + charEyeClass + '">Eye Color: ' + player.eyeColor + "</li>",
+            '<li class="list-group-item ' + charBirthClass + '">Birth Year: ' + player.birthYear + "</li>",
             '</ul>'].join('');
 
         return content;
@@ -210,6 +215,9 @@ var game = {
         var enemyStatus = 'alive';
         var status = [];
         var attackLine = "";
+        var heroHealthClass = "char-health-" + heroCharacter.swapiID;
+        var heroAttackClass = "char-attack-" + heroCharacter.swapiID;
+        var enemyHealthClass = "char-health-" + enemyCharacter.swapiID;
 
         enemyCharacter.health = enemyCharacter.health - heroCharacter.attack;
         attackLine = heroQuick + " slashes " + enemyQuick + " for " + heroCharacter.attack + " dmg<br />";
@@ -248,6 +256,11 @@ var game = {
 
         $('.' + hero).find('.health-text').text(heroCharacter.health);
         $('.' + enemy).find('.health-text').text(enemyCharacter.health);
+
+        $('.' + heroHealthClass).text('Health: ' + heroCharacter.health);
+        $('.' + heroAttackClass).text('Attack: ' + heroCharacter.attack);
+        $('.' + enemyHealthClass).text('Health: ' + enemyCharacter.health);
+
         $('.damage').html(attackLine);
 
         return status;
@@ -320,6 +333,7 @@ $( document ).ready(function() {
                 charNames.splice( charNames.indexOf(char), 1 );
                 $(".character-yours").append(character);
                 $(".character-pick-enemy").show();
+                $(".popover").popover('hide');
                 $(".character-pick").children().hide();
             } else if (!enemyChosen) {
                 var character = $("." + char);
@@ -330,6 +344,7 @@ $( document ).ready(function() {
                 charNames.splice( charNames.indexOf(char), 1 );
                 $(".character-defender").append(character[0]);
                 $(".character-selection").children().hide();
+                $(".popover").popover('hide');
                 $(".damage").text(characters[heroChosen].name + " vs. " + characters[enemyChosen].name);
                 $(".battle-royale").show();
             } else {
@@ -346,11 +361,13 @@ $( document ).ready(function() {
 
             if (status[0] === 'dead') {
                 game.gameOver('loss');
+                $(".popover").popover('hide');
             }
 
             if (status[1] === 'dead') {
                 enemyKills++;
                 enemyChosen = "";
+                $(".popover").popover('hide');
 
                 if(enemyKills === 3) {
                     game.gameOver('win');
@@ -358,8 +375,4 @@ $( document ).ready(function() {
             }
         }
     });
-
-    $(function () {
-        $('[data-toggle="popover"]').popover()
-    })
 });
