@@ -111,9 +111,16 @@ var game = {
         var imagePath = 'assets/images/' + player.image;
 
         var anchor = $('<a>').addClass(char);
-        var card = $('<div>').addClass('card float-left pl-2 pr-2 pt-2 m-2 text-center text-white bg-dark border border-warning').attr({
-            style: 'width: 14rem',
-        });
+
+        if(player.side === 'rebel') {
+            var card = $('<div>').addClass('card float-left pl-2 pr-2 pt-2 m-2 text-center text-white bg-dark border border-primary').attr({
+                style: 'width: 14rem',
+            });
+        } else {
+            var card = $('<div>').addClass('card float-left pl-2 pr-2 pt-2 m-2 text-center text-white bg-dark border border-danger').attr({
+                style: 'width: 14rem',
+            });          
+        }
 
         var image = $('<img>').addClass('card-img-top').attr({
             src: imagePath,
