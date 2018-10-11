@@ -111,7 +111,7 @@ var game = {
         var imagePath = 'assets/images/' + player.image;
 
         var anchor = $('<a>').addClass(char);
-        var card = $('<div>').addClass('card float-left pl-2 pr-2 pt-2 m-2 text-center text-white bg-dark').attr({
+        var card = $('<div>').addClass('card float-left pl-2 pr-2 pt-2 m-2 text-center text-white bg-dark border border-warning').attr({
             style: 'width: 14rem',
         });
 
@@ -131,16 +131,20 @@ var game = {
         moreInfoP.append(moreInfoSelection);
 
         moreInfoSelection.html('<i class="fas fa-info-circle"></i> More Info');
-        var cardTitle = $('<a>').addClass('btn btn-dark p-2 m-0 text-right comments').attr({
-            href: '#'
-        });
-        var cardHealth = $('<p>').addClass('p-2 health-text').text(player.health);
 
         if(player.side === 'rebel') {
+            var cardTitle = $('<a>').addClass('btn btn-primary p-2 m-0 text-right comments').attr({
+                href: '#'
+            });
             cardTitle.html('<i class="fas fa-jedi"></i> ' + player.name);
         } else {
+            var cardTitle = $('<a>').addClass('btn btn-danger p-2 m-0 text-right comments').attr({
+                href: '#'
+            });
             cardTitle.html('<i class="fab fa-sith"></i> ' + player.name);
         }
+
+        var cardHealth = $('<p>').addClass('p-2 health-text').text(player.health);
 
         cardBody.append(moreInfoP);
         cardBody.append(cardTitle);
