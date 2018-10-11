@@ -13,7 +13,51 @@
     <script src="assets/javascript/game.js"></script>
 </head>
 <body>
+    <div class="container-fluid">
+        <div container="row">
+            <div container="col">
+
+                <!-- Wanted to try something a bit different for the Star Wars "logo":
+                http://www.webappers.com/2015/09/03/15-awesome-css3-text-effects/
+
+                Basically leveraged the code snippet for Musgrove about half way
+                down the page and modified it to fit the SW theme. Def. a heavier hitter
+                for page performance though... -->
+                <svg viewBox="0 0 2500 300" class="cool-logo">
+
+                    <!-- Symbol -->
+                    <symbol id="s-text">
+                        <text text-anchor="middle"
+                            x="50%" y="50%" dy=".35em">
+                        Star Wars
+                        </text>
+                    </symbol>  
+                    
+                    <!-- Duplicate symbols -->
+                    <use xlink:href="#s-text" class="text"
+                            ></use>
+                    <use xlink:href="#s-text" class="text"
+                            ></use>
+                    <use xlink:href="#s-text" class="text"
+                            ></use>
+                    <use xlink:href="#s-text" class="text"
+                            ></use>
+                    <use xlink:href="#s-text" class="text"
+                            ></use>
+                    
+                </svg>
+            </div>
+        </div>
+    </div>
+
     <div class="container-fluid mt-3 mb-3 primary-container">
+
+        <!-- Each row represents a screen that is hidden or displayed based off where they 
+        are in the game. In this case, the opening row is rebel-empire - pick your side! There
+        is no neutral side... what are we, from the "Neutral Planet" your Neutralness.
+    
+        Bonus points if you get the reference.
+        -->
         <div class="row rebel-empire">
             <div class="col-12 text-center">
                 <h1>Choose Wisely</h1>
@@ -29,6 +73,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Great, now that you picked your side what hero do you want to play as? Jedi only! -->
         <div class="row character-selection">
             <div class="col-12">
                 <h1>Character Selection</h1>
@@ -44,6 +90,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Game on! The real battle begins, so match your wit with the enemies in front of you. -->
         <div class="row battle-royale">
             <div class="col-12">
             <h1>Battle Royale</h1>

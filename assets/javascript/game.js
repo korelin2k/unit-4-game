@@ -3,49 +3,97 @@ var characters = {
         health: 150,
         attack: 8,
         counter: 10,
+        swapiID: 10,
         name: 'Obi Wan Kenobi',
         side: 'rebel',
-        image: 'obiwan.jpg'
+        image: 'obiwan.jpg',
+        height: '',
+        mass: '',
+        hair: '',
+        skinColor: '',
+        eyeColor: '',
+        birthYear: '',
+        gender: ''
     },
     charLuke: {
         health: 125,
         attack: 10,
         counter: 20,
+        swapiID: 1,
         name: 'Luke Skywalker',
         side: 'rebel',
-        image: 'luke.jpg'
+        image: 'luke.jpg',
+        height: '',
+        mass: '',
+        hair: '',
+        skinColor: '',
+        eyeColor: '',
+        birthYear: '',
+        gender: ''
     },  
     charYoda: {
         health: 100,
         attack: 12,
         counter: 30,
+        swapiID: 20,
         name: 'Yoda',
         side: 'rebel',
-        image: 'yoda.jpg'
+        image: 'yoda.jpg',
+        height: '',
+        mass: '',
+        hair: '',
+        skinColor: '',
+        eyeColor: '',
+        birthYear: '',
+        gender: ''
     }, 
     charSidious: {
         health: 150,
         attack: 8,
         counter: 10,
+        swapiID: 21,
         name: 'Darth Sidious',
         side: 'empire',
-        image: 'sidious.jpg'
+        image: 'sidious.jpg',
+        height: '',
+        mass: '',
+        hair: '',
+        skinColor: '',
+        eyeColor: '',
+        birthYear: '',
+        gender: ''
     },
     charMaul: {
         health: 125,
         attack: 10,
         counter: 20,
+        swapiID: 44,
         name: 'Darth Maul',
         side: 'empire',
-        image: 'maul.jpg'
+        image: 'maul.jpg',
+        height: '',
+        mass: '',
+        hair: '',
+        skinColor: '',
+        eyeColor: '',
+        birthYear: '',
+        gender: ''
     },
     charVader: {
         health: 100,
         attack: 12,
         counter: 30,
+        swapiID: 4,
         name: 'Darth Vader',
         side: 'empire',
-        image: 'vader.jpg'
+        image: 'vader.jpg',
+        height: '',
+        mass: '',
+        hair: '',
+        skinColor: '',
+        eyeColor: '',
+        birthYear: '',
+        gender: ''
     }
 }
 
@@ -63,7 +111,7 @@ var game = {
         var imagePath = 'assets/images/' + player.image;
 
         var anchor = $('<a>').addClass(char);
-        var card = $('<div>').addClass('card float-left p-2 m-2 text-center').attr({
+        var card = $('<div>').addClass('card float-left pl-2 pr-2 pt-2 m-2 text-center').attr({
             style: 'width: 14rem',
         });
 
@@ -73,12 +121,22 @@ var game = {
         });
         card.append(image);
 
-        var cardBody = $('<div>').addClass('card-body text-center');
-        var cardTitle = $('<a>').addClass('btn btn-dark p-2 m-0 text-center').attr({
+        var cardBody = $('<div>').addClass('card-body text-center p-0 m-0');
+        var moreInfoP = $('<p>').addClass('text-right');
+        var moreInfoSelection = $('<a>').attr({
+            rel: 'comments',
+            title: 'more info'
+        });
+
+        moreInfoP.append(moreInfoSelection);
+
+        moreInfoSelection.text('More Info');
+        var cardTitle = $('<a>').addClass('btn btn-dark p-2 m-0 text-right comments').attr({
             href: '#'
         });
-        var cardHealth = $('<p>').addClass('p-2').text(player.health);
+        var cardHealth = $('<p>').addClass('p-2 health-text').text(player.health);
         cardTitle.text(player.name);
+        cardBody.append(moreInfoP);
         cardBody.append(cardTitle);
         cardBody.append(cardHealth);
         card.append(cardBody);
@@ -89,13 +147,65 @@ var game = {
         }  else {
             $(".character-pick-enemy").append(anchor);
         }
+
+        var popoverTemplate = ['<div class="popover"><div class="arrow"></div>',
+            '<div class="popover-body"></div>',
+            '<div class="popover-footer"></div>',
+            '</div>'].join('');
+
+        $("[rel=comments]").popover({
+            trigger : 'click',  
+            placement : 'bottom', 
+            html: true, 
+            content : function(){
+                var content = game.characterStats(player);
+                return content;
+            },
+            template: popoverTemplate
+        })
+    },
+
+    characterStats: function(player) {
+        var restCall = 'https://swapi.co/api/people/' + player.swapiID + "/";
+        console.log(restCall);
+
+        $.ajax({
+            url: restCall
+        }).then(function(info) {
+            player.height = info.height;
+            player.mass = info.mass;
+            player.hair = info.hair_color;
+            player.skinColor = info.skin_color;
+            player.eyeColor = info.eye_color;
+            player.birthYear = info.birth_year;
+
+            $('.char-height').text('Height: ' + player.height);
+            $('.char-mass').text('Mass: ' + player.mass);
+            $('.char-hair').text('Hair: ' + player.hair);
+            $('.char-skin').text('Skin Color: ' + player.skinColor);
+            $('.char-eye').text('Eye Color: ' + player.eyeColor);
+            $('.char-birth').text('Birth Year: ' + player.birthYear);
+        });
+
+        var content = ['<ul class="list-group list-group-flush">',
+            '<li class="list-group-item">Name: ' + player.name + "</li>",
+            '<li class="list-group-item">Health: ' + player.health + "</li>",
+            '<li class="list-group-item">Attack: ' + player.attack + "</li>",
+            '<li class="list-group-item">Counter: ' + player.counter + "</li>",
+            '<li class="list-group-item char-hair">Hair: ' + player.hair + "</li>",
+            '<li class="list-group-item char-skin">Skin Color: ' + player.skinColor + "</li>",
+            '<li class="list-group-item char-eye">Eye Color: ' + player.eyeColor + "</li>",
+            '<li class="list-group-item char-birth">Birth Year: ' + player.birthYear + "</li>",
+            '</ul>'].join('');
+
+        return content;
     },
 
     battle: function(hero, enemy) {
         var heroCharacter = characters[hero];
-        var heroQuick = heroCharacter.name.substr(0,heroCharacter.name.indexOf(' '));
+        var heroQuick = heroCharacter.name.split(" ")[0];
         var enemyCharacter = characters[enemy];
-        var enemyQuick = enemyCharacter.name.substr(0,enemyCharacter.name.indexOf(' '));
+        var enemyQuick = enemyCharacter.name.split(" ")[0];
         var heroStatus = 'alive';
         var enemyStatus = 'alive';
         var status = [];
@@ -118,7 +228,7 @@ var game = {
 
         if (enemyStatus === 'alive') {
             heroCharacter.health = heroCharacter.health - enemyCharacter.counter;
-            attackLine += heroQuick + " slashes " + enemyQuick + " for " + enemyCharacter.attack + " dmg";
+            attackLine += enemyQuick + " slashes " + heroQuick + " for " + enemyCharacter.counter + " dmg";
         }
 
         if (baseAttack === 0) {
@@ -136,8 +246,8 @@ var game = {
 
         status = [heroStatus, enemyStatus];
 
-        $('.' + hero).find('p').text(heroCharacter.health);
-        $('.' + enemy).find('p').text(enemyCharacter.health);
+        $('.' + hero).find('.health-text').text(heroCharacter.health);
+        $('.' + enemy).find('.health-text').text(enemyCharacter.health);
         $('.damage').html(attackLine);
 
         return status;
@@ -193,7 +303,12 @@ $( document ).ready(function() {
         }
         classList = classList.slice(0, -2);
     
-        $(classList).click(function() {
+        $(classList).click(function(e) {
+            if($(e.target).is('[rel=comments]')){
+                e.preventDefault();
+                return;
+            }
+            
             var char = $(this).attr("class");
     
             if (!heroChosen) {
@@ -243,4 +358,8 @@ $( document ).ready(function() {
             }
         }
     });
+
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
 });
