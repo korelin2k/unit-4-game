@@ -11,10 +11,6 @@ body {
     min-width: 800px;
 }
 
-.card {
-    background-color: #aaa;
-}
-
 .light-saber:hover {
     transform: scale(2);
 }
@@ -41,8 +37,6 @@ body {
 
 .character-attack {
     vertical-align: middle;
-    background-color: #fff;
-    color: #000;
 }
 
 h1 {
