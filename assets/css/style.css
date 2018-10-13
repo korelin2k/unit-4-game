@@ -17,10 +17,14 @@ body {
 
 .rebel {
     background-color: rgb(64, 191, 254);
+    font-size: 32px;
+    color: #000;
 }
 
 .empire {
     background-color: rgb(255, 70, 70);
+    font-size: 32px;
+    color: #000;
 }
 
 .character-selection {
@@ -37,6 +41,10 @@ body {
 
 .character-attack {
     vertical-align: middle;
+}
+
+.saber-pointer a:hover {
+    cursor:url(http://www.picgifs.com/smileys/smileys-and-emoticons/money/smileys-money-671353.gif), auto;
 }
 
 h1 {

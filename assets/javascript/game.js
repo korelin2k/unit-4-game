@@ -1,3 +1,4 @@
+// Initial object created for a list of characters and their attributes
 var characters = {
     charObi: {
         health: 150,
@@ -97,9 +98,13 @@ var characters = {
     }
 }
 
+// List of character names will be populated here so it can easily be looped through
 var charNames = [];
+
+// Base attack modifier is stored here
 var baseAttack = 0;
 
+// Game object - used heavily across the game
 var game = {
     inititateGame: function() {
         for (char in characters) {
@@ -107,6 +112,8 @@ var game = {
         }
     },
 
+    // Creates the player card, and this is a heavy function - leveraging the bootstrap
+    // card utility and a popover
     createPlayerCard: function(player, char, side) {
         var imagePath = 'assets/images/' + player.image;
 
@@ -182,6 +189,9 @@ var game = {
         })
     },
 
+    // API call to SWAPI - aka, the star wars API, to populate some information on a 
+    // character. Not the best API since you can't search based on a character name, so
+    // I had to find the associated ID to call it (aka the swapiID).
     characterStats: function(player, char) {
         var restCall = 'https://swapi.co/api/people/' + player.swapiID + "/";
         console.log(char);
@@ -223,6 +233,7 @@ var game = {
         return content;
     },
 
+    // All the functions are located here
     battle: function(hero, enemy) {
         var heroCharacter = characters[hero];
         var heroQuick = heroCharacter.name.split(" ")[0];
@@ -283,6 +294,7 @@ var game = {
         return status;
     },
 
+    // Win or loss, called here
     gameOver: function(resultOfGame) {
         if (resultOfGame === 'win') {
             $('.character-attack').html('<h2>You Won - Enjoy the Loot Box!</h2>');
@@ -303,6 +315,7 @@ var game = {
     }
 }
 
+// Loads when the document started
 $( document ).ready(function() {
     var heroChosen = "";
     var enemyChosen = "";
@@ -356,7 +369,7 @@ $( document ).ready(function() {
                 var character = $("." + char);
                 character.detach();
                 character.find('.btn-dark').toggleClass('btn-dark btn-danger')
-                character.find('.float-left').toggleClass('float-left float-right')
+                character.find('.float-left').toggleClass('float-left float-right saber-pointer')
                 enemyChosen = char;
                 charNames.splice( charNames.indexOf(char), 1 );
                 $(".character-defender").append(character[0]);
