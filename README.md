@@ -14,3 +14,6 @@
 1. Leveraged bootstrap 4 for simplicity and speed - getting used to it now
 2. Leveraged the Star Wars API, aka SWAPI and an AJAX call (simple)
 3. Font awesome icons I used several times - pretty handy! Even had a jedi / sith icon.
+
+### Link
+https://korelin2k.github.io/unit-4-game/index.html
